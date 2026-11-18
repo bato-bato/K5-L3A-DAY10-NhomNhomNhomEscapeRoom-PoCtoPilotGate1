@@ -60,3 +60,28 @@ Commit B4–B5: `17ffb13`. Phiếu C mục C10–C12 và report `R-S1-grade-2026
 ### Exit ticket
 
 Chờ Tống Thiên Bảo tự ghi sau phần demo.
+
+## PhanHoangPhuc-2A202603455
+
+### Phần việc phụ trách
+
+Vai N2 trong bàn (đánh giá, kiểm thử, phân tích sự cố; ghi trong bảng là Kỹ thuật). Câu 2.1, 2.2, 2.8 của đề; Phiếu B mục B0 (dòng 1–2), B1, B2, B7.3. Chạy `lab10.eval`, `lab10.gate`, `lab10.trace`, `unittest`; bàn giao vị trí đặt cổng cho N1.
+
+### Đóng góp cụ thể
+
+- Chạy mốc base ngay sau commit ký tiêu chí (`a1c65c7`, 15:35), đọc gate: trượt `wrongful_refund_vnd` (20.000đ) và `wrongful_carrier_faults` (1), cả hai từ `T-002@55` (kho HCM, hãng VNX).
+- Trace `T-002@55`: trợ lý tin số ngày khách khai (5) thay vì tracking (2) qua bước `model_override`, nên hoàn tiền và ghi lỗi hãng sai; tin `notify_carrier` còn kèm `customer_note` ngoài `carrier_notice_fields`. Phân loại cả hai là lỗi chìm, đề xuất hai chỗ đặt cổng cho N1.
+- Kiểm cổng vòng 1 của N1 trên bộ nền (110/110, không ca nào hỏng thêm, `escalation_rate` không tăng) và viết behavioral test hai ticket mới (O-1024, O-1015) cho câu 2.8.
+
+### Bằng chứng
+
+- Commit: `75e553c` (B0–B2), `fad339e` (B0 dòng 2, B7.3).
+- Mã lần chạy: `R-base-before-20261118-153939-b45eeb` (base), `R-base-after-20261118-162444-5eeaaa` (thử cổng vòng 1).
+- Phiếu B: B0 dòng 1–2, B1, B2 (bảng soát lỗi), B7.3 (hai ticket hiểm).
+
+### Exit ticket
+
+- Học được: `pass_rate` 0,99 vẫn có thể trượt Gate 1, vì một lỗi tiền chìm (khách không phàn nàn, bên thứ ba chịu) chỉ lộ ra khi đo bằng tiêu chí đã ký trước; behavioral test với ticket mới là cách kiểm cổng hiểu quy tắc chứ không chỉ khớp bộ nền.
+- Còn chưa chắc: trên thẻ S1, tỉ lệ chuyển người duyệt tăng từ 0,1538 lên 0,4615 sau khi sửa; với 1 người trực, chưa rõ khi lượng ticket thật lớn hơn thì hàng chờ có còn trong hạn 60 phút không.
+
+Công cụ hỗ trợ: có dùng trợ lý AI để chạy lệnh đo và soạn nháp phần ghi phiếu; số liệu và kết luận đã đối chiếu với report và trace.
