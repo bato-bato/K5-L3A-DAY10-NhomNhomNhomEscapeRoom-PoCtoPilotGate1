@@ -1,6 +1,6 @@
 # Phiếu B · Đo, rủi ro, cổng vòng 1 và quyết định v1 · Khối 2A + 2B + chốt (phút 65–115)
 
-**Bàn:** ______
+**Bàn:** NhomNhomNhomEscapeRoom
 
 Tiêu chí đã ký ở Phiếu A. Từ phút 65 bàn mới được chạy trợ lý. Khối 2A (65–85) chưa sửa code hay config. Khối 2B (85–105) sửa
 `lab10/guards.py` và `config/operating_gates.json`. Phút 105–115 chốt cổng vòng 1 rồi viết quyết định v1. Sau phút 115 không sửa phiếu này
@@ -323,18 +323,18 @@ nguyên nhân trong tracking). Rồi viết runbook dưới đây **khớp với
 
 *Runbook là tờ giấy người trực ca cầm lúc 23h khi có chuyện. Nó trả lời: nhìn con số nào, ngưỡng nào thì làm gì, ai được quyết.
 Phần 1–3 và mục Giờ cao điểm viết ở vòng 1. Phần 4–5 viết ở vòng 2 (Phiếu C mục C11). Mọi con số phải khớp `config/operating_gates.json` và report.*
-*Mỗi phần trả lời bốn câu hỏi: ai chịu trách nhiệm, nhìn gì, ngưỡng nào, làm gì.* **Người viết (vai Vận hành và pháp lý):** ______
+*Mỗi phần trả lời bốn câu hỏi: ai chịu trách nhiệm, nhìn gì, ngưỡng nào, làm gì.* **Người viết (vai Vận hành và pháp lý):** Tống Thiên Bảo
 
 #### Runbook 1 · Ai chịu trách nhiệm
 
 | Vai | Tên / mã nhân viên (lấy từ `data/world.json` → `staff`) | Được quyền làm gì | Liên lạc qua kênh nào |
 |---|---|---|---|
-| PIC của trợ lý (một người) | | | |
-| Người duyệt đứng tên các khoản vượt hạn mức | | | |
-| Người giữ công tắc tắt từng thao tác ghi | | | |
-| Người nhận khiếu nại của bên thứ ba (hãng, shop, người nhận quà) | | | |
+| PIC của trợ lý (một người) | Lê Thanh Tùng (`NV-TUNG`) | Theo dõi report, điều phối trực ca và quyết định thu hẹp hoặc dừng. | `#logix-pilot-ops` |
+| Người duyệt đứng tên các khoản vượt hạn mức | Trần Thị Hạnh (`NV-HANH`) | Xác minh tracking, số tiền và sổ cái trước khi duyệt. | `#logix-pilot-ops` |
+| Người giữ công tắc tắt từng thao tác ghi | Lê Thanh Tùng (`NV-TUNG`) | Tắt thao tác bị ảnh hưởng, ghi giờ dừng và xác nhận chuyển ca chờ. | `#logix-pilot-ops` |
+| Người nhận khiếu nại của bên thứ ba (hãng, shop, người nhận quà) | Phạm Kiều Oanh (`NV-OANH`) | Tiếp nhận, đối soát lỗi hãng và báo Tùng nếu xác nhận sai. | `#logix-pilot-ops` |
 
-Số người trực duyệt mỗi ca: ___ · Mỗi giờ duyệt được: ___ ca · Phạm vi pilot: ______ (tất cả / kho nào / bao nhiêu phần trăm)
+Số người trực duyệt mỗi ca: **1** · Mỗi giờ duyệt được: **6 ca** · Phạm vi lấy theo `business.pilot_scope`. Cấu hình hiện tại là mọi kho, 100%, chờ vai Sản phẩm và kinh doanh chốt B7.4.
 
 #### Runbook 2 · Nhìn con số nào, ngưỡng nào thì làm gì
 
@@ -342,22 +342,22 @@ Mỗi dòng một tín hiệu. Cột "Lấy ở đâu" phải là một dòng tr
 
 | Tín hiệu | Lấy ở đâu | Bình thường | Ngưỡng VÀNG → việc làm | Ngưỡng ĐỎ → việc làm | Ai quyết |
 |---|---|---|---|---|---|
-| Thời gian chờ người duyệt lâu nhất | | | | | |
-| Số ca bị ùn | | | | | |
-| Chi phí mỗi ticket so với làm tay | | | | | |
-| Tổng tiền hoàn tự động trong ngày so với trần | | | | | |
-| Tiền hoàn sai | | | | | |
-| Lỗi ghi oan cho hãng / lộ dữ liệu cá nhân (pháp lý) | | | | | |
-| (tín hiệu riêng của bàn) | | | | | |
+| Thời gian chờ người duyệt lâu nhất | `queue_wait_max_min` | <30 phút | 30–45 phút, Hạnh báo Tùng gọi hỗ trợ | >45 phút, thu hẹp. Tắt `issue_refund` nếu tải chưa giảm | Tùng |
+| Số ca bị ùn | `queue_stuck` | 0 và dưới 3 ca đang chờ | 0 ca ùn nhưng từ 3 ca đang chờ, gọi hỗ trợ theo B7.6 | Từ 1 ca ùn, thu hẹp và bàn giao ca tồn cho Hạnh | Tùng |
+| Chi phí mỗi ticket so với làm tay | `cost_per_ticket_vnd` | <9.000đ | 9.000–10.000đ, Bình kiểm theo kho | >10.000đ, Tùng thu hẹp theo chi phí từng kho | Tùng cùng Bình |
+| Tổng tiền hoàn tự động trong ngày so với trần | `auto_refund_day_max_vnd` | <80% trần | 80–100%, Hạnh theo dõi và chuẩn bị duyệt tay | >100%, tắt `issue_refund`. Dùng trần bàn đã chốt, tối đa 2.000.000đ theo Finance | Tùng |
+| Tiền hoàn sai | `wrongful_refund_vnd` | 0đ | Có khiếu nại chờ đối soát, Hạnh rà sổ | Xác nhận >0đ, tắt `issue_refund` và giữ chứng từ | Tùng |
+| Lỗi ghi oan cho hãng / lộ dữ liệu cá nhân (pháp lý) | `wrongful_carrier_faults`, `pii_leaks` | Cả hai bằng 0 | Có khiếu nại, Oanh đối soát mã đơn và kiện | Từ 1 lỗi oan, tắt `file_carrier_fault` và `notify_carrier`. Từ 1 ca lộ, dừng hẳn | Tùng |
+| (tín hiệu riêng của bàn) | `review_rate` × lượng ticket/giờ dự báo | Dưới 5 ca cần duyệt/giờ | Từ 5 đến 6 ca/giờ, gọi người hỗ trợ | >6 ca/giờ, thu hẹp phạm vi nếu không có người bổ sung | Tùng |
 
 #### Runbook 3 · Điều kiện dừng và cách dừng
 
-- Dừng một phần (tắt một thao tác ghi, thu hẹp phạm vi) khi: …
-- Dừng hẳn khi: …
-- Cách dừng, từng bước (công tắc nào trong `config/switches.json`, dòng nào trong `config/operating_gates.json`): …
-- Từ tín hiệu đỏ đến lúc dừng xong tối đa ____ phút; người bấm: ____
-- Khi đã dừng, ticket đang chờ đi đâu, ai xử lý: …
-- Điều kiện để bật lại, ai ký: …
+- Dừng một phần (tắt một thao tác ghi, thu hẹp phạm vi) khi: hàng chờ >45 phút hoặc có ca ùn, vượt chi phí làm tay hoặc trần hoàn tự động, xác nhận hoàn sai hoặc ghi lỗi hãng oan. Áp dụng thao tác tương ứng ở Runbook 2.
+- Dừng hẳn khi: xác nhận lộ dữ liệu cá nhân hoặc không khoanh vùng được lỗi ghi.
+- Cách dừng, từng bước (công tắc nào trong `config/switches.json`, dòng nào trong `config/operating_gates.json`): Tùng báo sự cố và giờ nhận báo trên `#logix-pilot-ops`, lưu mã ticket và đối chiếu sổ. Tắt công tắc tương ứng bằng `"off"`. Khi thu hẹp, chỉnh `business.pilot_scope` theo kho hoặc phần trăm đã thống nhất với Bình. Khi dừng hẳn, tắt cả `issue_refund`, `file_carrier_fault`, `notify_carrier`, `send_reply` và ngừng nhận ticket tự động ở đầu vào. Xác nhận chuyển ca chờ sang CSKH và ghi giờ hoàn tất.
+- Từ tín hiệu đỏ đến lúc dừng xong tối đa **10 phút**. Người bấm là **Lê Thanh Tùng (`NV-TUNG`)**.
+- Khi đã dừng, ticket đang chờ đi đâu, ai xử lý: chuyển hàng chờ CSKH cho Hạnh cùng mã ticket, lý do và trạng thái hoàn. Hạnh đối chiếu sổ cái trước khi duyệt tay. Oanh rà các bản ghi và thông báo hãng bị ảnh hưởng.
+- Điều kiện để bật lại, ai ký: lỗi đã khoanh vùng và sửa, có kiểm tra lại theo tiêu chí đã ký, hàng chờ trở lại dưới 30 phút và không còn ca ùn. Hạnh xác nhận tiếp nhận ca, Oanh xác nhận đối soát nếu có bên thứ ba bị ảnh hưởng, Tùng ký bật lại.
 
 ### B7.6 · Giờ cao điểm (bắt buộc với thẻ S4; các thẻ khác nên có)
 
@@ -365,11 +365,11 @@ Lượng ticket có thể dồn gấp ba trong một giờ (ngày sale, sau bão
 
 | Câu hỏi | Trả lời (có số, có tên) |
 |---|---|
-| Giờ cao điểm là khi nào, bao nhiêu ticket mỗi giờ (dựa vào `ops_facts`)? | |
-| Ai trực giờ cao điểm, mấy người (khớp `operations.reviewers_on_shift`)? | |
-| Ngưỡng nào thì **gọi thêm người** (hàng chờ bao nhiêu ca, chờ lâu nhất bao nhiêu phút)? Ai gọi? | |
-| Ngưỡng nào thì **thu hẹp** phạm vi (khoá `business.pilot_scope`) hoặc **tắt** một thao tác ghi (`config/switches.json`)? Ai quyết? | |
-| Thêm người thì chi phí mỗi ticket và ROI thay đổi thế nào (đọc report)? | |
+| Giờ cao điểm là khi nào, bao nhiêu ticket mỗi giờ (dựa vào `ops_facts`)? | Giả định ngày sale hoặc sau bão. Bộ nền 22 ticket trong ca 480 phút, bình quân 2,75 ticket/giờ. Dồn gấp ba là 8,25 ticket/giờ, lấy 9 để lập lịch trực. |
+| Ai trực giờ cao điểm, mấy người (khớp `operations.reviewers_on_shift`)? | 1 người duyệt là Trần Thị Hạnh (`NV-HANH`), công suất 6 ca/giờ. Lê Thanh Tùng (`NV-TUNG`) điều phối và giữ công tắc. |
+| Ngưỡng nào thì **gọi thêm người** (hàng chờ bao nhiêu ca, chờ lâu nhất bao nhiêu phút)? Ai gọi? | Tùng gọi thêm 1 người CSKH đã được phân quyền khi có từ 3 ca chờ, chờ lâu nhất từ 30 phút hoặc dự báo từ 5 ca cần duyệt/giờ. Hạnh giữ quyền duyệt vượt hạn mức. |
+| Ngưỡng nào thì **thu hẹp** phạm vi (khoá `business.pilot_scope`) hoặc **tắt** một thao tác ghi (`config/switches.json`)? Ai quyết? | Tùng quyết thu hẹp khi chờ >45 phút, có từ 1 ca ùn hoặc dự báo >6 ca/giờ mà chưa bố trí được hỗ trợ. Nếu chưa giảm tải, tắt `issue_refund` và chuyển sang quy trình CSKH thủ công. |
+| Thêm người thì chi phí mỗi ticket và ROI thay đổi thế nào (đọc report)? | Người thứ hai tăng công suất danh nghĩa lên 12 ca/giờ và tăng phí trực 30.000đ/ca. Với 22 ticket cùng phạm vi và các chi phí khác giữ nguyên, tăng khoảng 1.364đ/ticket và làm ROI giảm. Đọc lại `cost_per_ticket_vnd`, `roi` và thời gian chờ trong report sau khi tiêu chí được ký để xác nhận. |
 
 ---
 

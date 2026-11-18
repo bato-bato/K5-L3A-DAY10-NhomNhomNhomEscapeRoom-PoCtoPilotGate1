@@ -28,7 +28,9 @@ rồi mới chạy đánh giá. Khối 1 không sửa code.
 ### Câu 1.2 · Mục tiêu nhìn từ hai người
 
 - Chị Oanh, kế toán đối soát (không dùng trợ lý, nhưng phải khớp sổ với hãng và shop mỗi tuần): Khi đối soát hằng tuần với hãng và shop, chị cần tra được mỗi khoản hoàn thuộc đơn nào, số tiền bao nhiêu, vì sao hoàn và ai đã duyệt nếu ca đó cần phê duyệt. Nhờ vậy, chị có thể khớp sổ và tìm nguyên nhân khi có chênh lệch.
+  - Đối chiếu được từng khoản hoàn và từng lỗi hãng với mã đơn, mã kiện, bên chịu tiền và căn cứ tracking hoặc phê duyệt để sửa sai trước khi chốt sổ tuần.
 - Chị Hạnh, trưởng ca CSKH (phải duyệt những ca trợ lý chuyển sang): Khi nhận ca chuyển duyệt, chị cần thấy ngay lý do chuyển, dữ liệu giao hàng, chính sách áp dụng và số tiền đề xuất để quyết định duyệt hay từ chối kịp thời mà không phải tra lại từ đầu.
+  - Nhận ca trong SLA 60 phút, có mã đơn, lý do chuyển, số tiền đề xuất và trạng thái sổ cái để duyệt mà tránh ghi hoàn trùng.
 
 ---
 
@@ -66,6 +68,15 @@ nhau chia cho số lần chạy có sự kiện `proposal`; lần chạy không 
 Điểm mù: không thấy trường hợp chính tracking DB sai.
 
 _(Ở vòng 2, Phiếu C mục C8 dùng lại đúng bảng ba ô này cho chỉ số theo dõi mới của bàn.)_
+
+**Telemetry (N4)**
+
+- **Bước / hành vi được đo** Xử lý khiếu nại của hãng hoặc shop về lỗi hãng do trợ lý ghi.
+- **Thước đo** (một câu, có đơn vị) Số bản ghi lỗi hãng của trợ lý bị khiếu nại có mã đối chiếu trong 24 giờ, đơn vị ca.
+- **Dữ liệu** (lấy ở đâu, bao nhiêu, ai gán nhãn) Toàn bộ khiếu nại hãng/shop nhận trong 24 giờ và nhật ký ghi lỗi của trợ lý. Oanh đối chiếu mã đơn, mã kiện và mã bản ghi; dùng khiếu nại làm tín hiệu thay cho nhãn đúng/sai.
+- **Cách tính** (công thức, mẫu số, cách xử lý ca thiếu dữ liệu) Đếm mã bản ghi lỗi khác nhau khớp với khiếu nại nhận trong cửa sổ. Đây là số đếm nên không có mẫu số. Ca thiếu mã đưa vào danh sách đối soát riêng.
+- **Khung thời gian / ngưỡng báo động** Cửa sổ trượt 24 giờ. Từ 1 ca gửi cảnh báo cho Oanh và Tùng đối chiếu. Nếu xác nhận ghi oan, tắt ghi lỗi và thông báo hãng theo B7.5.
+- **Điểm mù** (thước đo này KHÔNG thấy gì) Bỏ sót lỗi chưa bị khiếu nại, khiếu nại tới muộn hoặc thiếu mã. Có khiếu nại chưa đủ căn cứ kết luận hãng bị ghi oan.
 
 ---
 
