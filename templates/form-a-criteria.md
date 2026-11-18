@@ -20,7 +20,9 @@ rồi mới chạy đánh giá. Khối 1 không sửa code.
 
 ### Câu 1.1 · Một mục tiêu cấp hệ thống (khác "model trả lời đúng")
 
-> …
+> Giúp LogiX xử lý yêu cầu hoàn tiền do giao trễ theo chính sách có hiệu lực và trong phạm vi phê duyệt, đồng thời chuyển ca ngoại lệ cho người có thẩm quyền và lưu căn cứ để đối soát.
+
+Đầu vào từ Lab 9 của Nguyễn Thị Thanh Bình (03497): [PRD v1.1](../docs/lab9/PRD_v1.1.md) và [eval card](../docs/lab9/eval_card.md). Các số đo trong eval card thuộc Lab 9. Mốc base của Lab 10 sẽ được đo sau khi ký tiêu chí.
 
 ### Câu 1.2 · Mục tiêu nhìn từ hai người
 
