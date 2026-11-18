@@ -65,11 +65,11 @@ Mình học được rằng kết quả kiểm thử đúng vẫn có thể chư
 
 ### Phần việc phụ trách
 
-Đánh giá và kiểm thử: chạy eval, gate, trace, Phiếu B mục B0–B2 và B7.3
+Lo phần chạy đo nền sau khi bên sản phẩm và bên vận hành ký tiêu chí, Phiếu B mục B0–B2 và B7.3
 
 ### Đóng góp cụ thể
 
-Chạy baseline sau khi ký tiêu chí, trace lỗi T-002@55 và chỉ chỗ đặt cổng cho bạn viết cổng, chạy lại kiểm cổng vòng 1 và viết hai ticket thử ở B7.3
+Chạy đo nền, thấy kết quả trượt ở hoàn sai 20 nghìn và 1 lỗi bị đổ oan cho hãng. Xem lại thì thấy trợ lý tin số ngày khách khai sai, báo cho thành viên kỹ thuật còn lại chỗ chặn, rồi chạy lại kiểm cổng và viết thêm ticket kiểm thử
 
 ### Bằng chứng
 
