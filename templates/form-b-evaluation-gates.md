@@ -251,11 +251,13 @@ Bốn lăng kính (bắt buộc đủ cả bốn; dự án AI hay chết ở ba 
 
 | Lý do thất bại (viết ở thì quá khứ) | Lăng kính | Kiểm được hôm nay? (trace / data / config nào) | Thành cổng phòng ngừa nào (code hay config) / hay vào risk register |
 |---|---|---|---|
-| | Kỹ thuật | | |
-| | Kinh doanh | | |
-| | Con người và vận hành | | |
-| | Pháp lý | | |
-| | | | |
+| Trợ lý đã dùng 5 ngày trễ khách tự khai thay cho 2 ngày trong tracking, rồi hoàn sai 20.000đ và ghi oan một lỗi cho hãng VNX. | Kỹ thuật | B2, trace `T-002@55`: `model_override`, `issue_refund`, `file_carrier_fault`. REFUND-v3 yêu cầu trễ ít nhất 3 ngày cho ca này. Xem thêm B4, dòng PERTURBED về độ trễ. | **Ưu tiên 1 · Code.** Dùng `write_gate` để đối chiếu tracking và chính sách hiệu lực trước khi hoàn tiền hoặc ghi lỗi hãng. |
+| Trong ngày cao điểm, nhiều khoản hoàn hợp lệ đã cộng dồn vượt ngân sách hoàn tự động trong ngày. | Kinh doanh | B1 ghi nhận chưa đặt trần ngày. Đối chiếu `data/world.json` → `ops_limits.daily_auto_refund_budget_vnd` (2.000.000đ) và khóa `business.daily_refund_cap_vnd` trong `config/operating_gates.json`. | **Ưu tiên 3 · Config và code.** Đặt trần ngày ở `business.daily_refund_cap_vnd`. Chuyển ca sang người duyệt trước khi ghi nếu khoản mới làm tổng hoàn tự động vượt trần. |
+| Nhiều ca cần duyệt đã đến cùng lúc, khiến người trực không tiếp nhận kịp và hàng chờ vượt SLA. | Con người và vận hành | B1 có 5 ca chuyển người duyệt và 0 ca ùn. B4 ước tính nếu 9 ca cùng đến và một người xử lý 6 ca/giờ, ca cuối chờ khoảng 80 phút, vượt SLA 60 phút. | **Sổ rủi ro.** Theo dõi thời gian chờ và số ca ùn. Dùng runbook B7.6 để quy định lúc gọi thêm người hoặc thu hẹp pilot. |
+| Trợ lý đã gửi nguyên văn lời khách cho hãng ngoài phạm vi dữ liệu được phép chia sẻ. | Pháp lý | B2, trace `T-002@55`: `notify_carrier` chứa `customer_note`, trường nằm ngoài `carrier_notice_fields` của REFUND-v3. B4 nêu thêm nguy cơ lời khách chứa thông tin liên hệ. | **Ưu tiên 2 · Code.** Dùng `write_gate` để chỉ gửi các trường được phép, với số ngày trễ lấy từ tracking đã xác minh. |
+| Phân khúc ticket không gắn được kho đã tốn nhiều tiền xử lý hơn làm tay. | Kinh doanh | B1, mục theo kho và hãng: nhóm kho `?` có 5 lần chạy, chi phí 10.359đ/ticket. `data/world.json` ghi chi phí làm tay 10.000đ/ticket. | **Sổ rủi ro.** Theo dõi chi phí và số ca thiếu kho. Đánh giá lại phạm vi pilot nếu chênh lệch vẫn còn khi có thêm dữ liệu. |
+
+B1–B2 ghi bằng chứng từ bộ mô phỏng. Vượt trần ngày và ùn hàng chờ giờ cao điểm là hai kịch bản cần kiểm thêm.
 
 ---
 
