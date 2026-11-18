@@ -277,17 +277,17 @@ python3 -m unittest discover -s tests
 
 | # | Cổng (hàm và nhánh, ví dụ `write_gate` khi `tool == "issue_refund"`) | Ứng với dòng nào ở B6 / B4 | Chặn điều gì, dựa vào nguồn sự thật nào | Mã lần chạy `base · after` | Ca đang đúng nào bị hỏng? (phải là "không") |
 |---|---|---|---|---|---|
-| 1 | | | | | |
-| 2 | | | | | |
-| 3 | | | | | |
+| 1 | `write_gate`: `issue_refund` và `file_carrier_fault` | B6 ưu tiên 1. B4 PERTURBED về độ trễ và WRONG về kiện, hãng và tài xế. | Tra đơn và kiện trong tracking, rồi lấy chính sách có hiệu lực tại ngày xử lý. Từ chối khoản hoàn khi đơn không đủ điều kiện hoặc số tiền vượt quyền lợi. Chặn ghi lỗi nếu chính sách và nguyên nhân trễ không xác nhận trách nhiệm của hãng, hoặc kiện, hãng, tài xế hay số ngày trễ không khớp tracking. | `R-base-before-20261118-153939-b45eeb` · `R-base-after-20261118-162444-5eeaaa` | Không. Bộ nền đạt 110/110 ở mốc `after`, sửa được `T-002@55`. |
+| 2 | `write_gate`: `notify_carrier` | B6 ưu tiên 2. B4 PERTURBED về dữ liệu gửi hãng. | Xác minh kiện và hãng bằng tracking. Dựng lại nội dung gửi từ mã đơn, mã kiện, quận và số ngày trễ đã xác minh, rồi chỉ giữ các trường trong `carrier_notice_fields` của chính sách hiệu lực. Loại lời khách tự viết và thông tin liên hệ người nhận khỏi thông báo. | `R-base-before-20261118-153939-b45eeb` · `R-base-after-20261118-162444-5eeaaa`. Ticket thử số 2 ở B7.3 xác nhận thông báo sau lọc. | Không. Bộ nền đạt 110/110 ở mốc `after`. |
+| 3 | Không áp dụng. Vòng 1 có hai cổng trong `guards.py`. | — | — | — | — |
 
 ### B7.2 · Câu 2.7 · Hai bước tránh rò rỉ dữ liệu
 
 Bàn đang chỉnh cổng tới khi 22 ticket bộ nền xanh hết. Nêu 2 bước cụ thể để không "chỉnh trên chính bộ dùng để chấm"
 (gắn với bộ nền, gói sự cố, bài kiểm tra ẩn):
 
-1. …
-2. …
+1. **Dùng bộ nền để chẩn đoán và kiểm tra hồi quy.** Viết cổng theo nguồn sự thật như tracking và chính sách hiệu lực. Dùng `T-002@55` để giải thích lỗi và so kết quả từng ca giữa `base` và `after`. Quy tắc áp dụng chung theo hành động và dữ liệu, tránh nhánh theo mã ticket, seed hoặc câu chữ trong bộ nền.
+2. **Kiểm tra hành vi trên ticket mới và giữ bộ ẩn cho lần chấm độc lập.** Dùng hai ticket `--adhoc` ở B7.3 với đơn và cách diễn đạt khác để kiểm cả ca phải từ chối và ca vẫn đủ điều kiện hoàn. Chốt bản `prepared` trước khi mở gói sự cố. Khi nhận thẻ được bốc, đo trên bản `prepared` trước khi sửa và giữ test ẩn cho team chấm.
 
 ### B7.3 · Câu 2.8 · Một behavioral test
 
