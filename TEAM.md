@@ -105,3 +105,26 @@ Sản phẩm và kinh doanh. Phụ trách mục tiêu hệ thống và tiêu ch�
 - Mình còn chưa chắc đồng bộ chứng từ giao hàng thực tế sẽ giảm được bao nhiêu ca cần xác minh thủ công. Cần đo lại chi phí mỗi ticket và thời gian chờ duyệt để xem có đạt 5.000đ/ticket mà vẫn giữ an toàn hay không.
 
 Mình dùng trợ lý AI để soạn nháp và rà nội dung Phiếu A, B3 và mục cá nhân.
+
+## NguyenQuynhTrang-2A202603477
+
+### Phần việc phụ trách
+
+N1, Kỹ sư cổng. Phụ trách code cổng phòng ngừa vòng 1 trong `lab10/guards.py`, đóng góp cho pre-mortem ở B6 và ghi cách triển khai, kiểm chứng ở B7.1–B7.2.
+
+### Đóng góp cụ thể
+
+- Dựa trên trace `T-002@55` do N2 bàn giao, đề xuất dùng tracking và chính sách hiệu lực để kiểm tra thao tác hoàn tiền, ghi lỗi hãng và gửi thông báo cho hãng. Ghi các đề xuất và thứ tự ưu tiên trong B6.
+- Triển khai hai cổng trong `write_gate`. Cổng thứ nhất kiểm tra quyền lợi hoàn tiền và căn cứ ghi lỗi hãng. Cổng thứ hai dựng lại thông báo từ dữ liệu đã xác minh và giới hạn các trường gửi theo `carrier_notice_fields`.
+- Chạy bộ test công khai, đối chiếu kết quả N2 ghi ở B0 và B7.3, rồi điền B7.1–B7.2. Bộ nền đạt 110/110 sau khi thêm cổng và giữ nguyên các ca vốn đúng.
+
+### Bằng chứng
+
+- `af9c8ad` — pre-mortem B6 và hai cổng vòng 1.
+- `7bda8b7` — nội dung B7.1–B7.2.
+- `R-base-before-20261118-153939-b45eeb` và `R-base-after-20261118-162444-5eeaaa` — số liệu đối chiếu ở Phiếu B.
+
+### Exit ticket
+
+- Mình học được rằng kiểm tra ngay trước thao tác ghi có thể ngăn lỗi ngay cả khi trợ lý đã tin sai số ngày khách tự khai. Cổng cần dựa vào tracking và chính sách đang có hiệu lực.
+
