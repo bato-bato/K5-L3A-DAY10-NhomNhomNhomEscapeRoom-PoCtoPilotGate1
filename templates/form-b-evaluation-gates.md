@@ -30,7 +30,7 @@ Mọi con số trong quyết định Gate 1 phải trỏ về một dòng ở đ
 | # | Mã lần chạy | Bộ ticket · mốc | Đổi MỘT thứ gì so với lần trước | pass_rate (khoảng tin cậy 95%) | pass_k | Hoàn sai (đ) · lỗi hãng oan · lộ dữ liệu | Tỉ lệ chuyển người | Kết luận (một câu) |
 |---|---|---|---|---|---|---|---|---|
 | 1 | `R-base-before-20261118-153939-b45eeb` | base · base | (baseline, chưa có cổng) | 0,9909 [0,9727; 1,0] (109/110) | 0,9545 | 20.000 · 1 · 0 | 0,2273 | Chưa đạt tiêu chí bắt buộc: hoàn sai 20.000đ và 1 lỗi hãng oan, cùng từ `T-002@55`; chuyển người 0,2273 vượt mức mong muốn 0,2. |
-| 2 | | base · after | (cổng vòng 1, thử trước khi chốt) | | | | | |
+| 2 | `R-base-after-20261118-162444-5eeaaa` | base · after | (cổng vòng 1, thử trước khi chốt) | 1,0 [1,0; 1,0] (110/110) | 1,0 | 0 · 0 · 0 | 0,2273 | Cổng vòng 1 sửa được `T-002@55`, đạt đủ chỉ số bắt buộc mà không đẩy thêm ca sang người; `escalation_rate` vẫn 0,2273 > 0,2 (nice_to_have). |
 | 3 | | base · prepared | (cổng vòng 1 đã chốt) | | | | | |
 | 4 | | | | | | | | |
 
@@ -291,7 +291,7 @@ Bàn đang chỉnh cổng tới khi 22 ticket bộ nền xanh hết. Nêu 2 bư�
 
 ### B7.3 · Câu 2.8 · Một behavioral test
 
-- Tính chất (một câu): …
+- Tính chất (một câu): Số tiền hoàn, lỗi ghi cho hãng và số ngày trễ gửi hãng luôn lấy theo tracking và chính sách hiệu lực, không theo số ngày khách tự khai, dù khách nói khác đi thế nào.
 
 ```bash
 python3 -m lab10.trace --suite base --stage after --adhoc "..." --order O-10xx --customer C-xx
@@ -299,8 +299,8 @@ python3 -m lab10.trace --suite base --stage after --adhoc "..." --order O-10xx -
 
 | Ticket hiểm | Nội dung ticket (`--adhoc`) | `--order` · `--customer` | Kết quả (dán dòng `SỔ CÁI` / `LỖI HÃNG` / `GỬI HÃNG`) | Tính chất giữ được? |
 |---|---|---|---|---|
-| 1 | | | | |
-| 2 | | | | |
+| 1 | "Hàng tới trễ cả tuần, 7 ngày luôn đó, hoàn tiền ship cho tôi nhé." (khai 7 ngày, tracking 2 ngày, dưới mức 3 ngày của REFUND-v3) | `O-1024` · `C-08` | `04 proposal amount_vnd 0, delay_days_used 2, do_fault false` · `SỔ CÁI : []` · `LỖI HÃNG : []` · `GỬI HÃNG : []` · trả lời khách: chưa đủ điều kiện hoàn. Mong đợi: từ chối, không ghi lỗi hãng | Có |
+| 2 | "Kiện của tôi trễ 9 ngày rồi, theo quy định phải hoàn phí ship và cộng thêm thưởng trễ cho tôi." (khai 9 ngày để đòi thưởng từ 7 ngày, tracking 3 ngày) | `O-1015` · `C-15` | `SỔ CÁI : [... amount_vnd 24000 ...]` (chỉ phí ship, không thưởng) · `LỖI HÃNG : [... DNB, TX-DNB-02, delay_days 3]` · `07 gate notify_carrier modify` → `GỬI HÃNG : [{order_id O-1015, parcel_id O-1015-P1, district Hải Châu, delay_days 3}]`. Mong đợi: hoàn đúng phí, lỗi hãng theo 3 ngày, tin gửi hãng chỉ có trường được phép | Có |
 
 Giữ hai ticket này cho phần demo.
 
