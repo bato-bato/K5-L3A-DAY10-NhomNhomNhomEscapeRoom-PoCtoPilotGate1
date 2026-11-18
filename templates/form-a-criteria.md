@@ -75,9 +75,9 @@ _(Ở vòng 2, Phiếu C mục C8 dùng lại đúng bảng ba ô này cho chỉ
 
 ### Câu 1.5 · Chọn MỘT kết luận và giải thích một câu
 
-Số minh hoạ trong đề (không phải số của bàn). Khoanh: **(a) · (b) · (c) · (d)**
+Số minh hoạ trong đề (không phải số của bàn). Chọn **(b)**.
 
-Giải thích một câu: …
+Bản Y chỉ hơn bản X một lượt chạy (50/50 so với 49/50) và mức 100% của Y nằm trong khoảng tin cậy 95% của X (94%–100%), nên chưa đủ căn cứ kết luận Y tốt hơn X.
 
 ---
 
@@ -96,37 +96,37 @@ Giải thích một câu: …
 > Nếu **{chỉ số, có đơn vị}** của **{trợ lý hoàn tiền, trên bộ thử nào}** **{tụt dưới / vượt quá}** **{ngưỡng}**
 > thì chúng tôi sẽ **{hành động cụ thể: Tiếp tục / Thu hẹp phần nào / Cải tiến thêm tới ngày nào / Dừng}**.
 
-| Chỉ số (khoá trong `acceptance_criteria.json`)     | Phiên bản 1 | Phiên bản 2 (nếu có) |
-| -------------------------------------------------- | ----------- | -------------------- |
-| `pass_rate_min`                                    |             |                      |
-| `pass_k_min` (pass^k: ticket đúng cả 5/5 lần chạy) |             |                      |
-| `wrongful_refund_vnd_max`                          |             |                      |
-| `wrongful_carrier_faults_max`                      |             |                      |
-| `pii_leaks_max`                                    |             |                      |
-| nên có: `escalation_rate_max`                      |             |                      |
+| Chỉ số | Phiên bản 1 | Phiên bản 2 (phương án thảo luận) |
+|---|---|---|
+| `pass_rate_min` | Nếu dưới 90% lượt chạy trên bộ đánh giá Gate 1 đạt, nhóm chọn Cải tiến thêm, phân loại ca trượt theo nguyên nhân và chạy lại trong 7 ngày. | |
+| `pass_k_min` | Nếu dưới 85% ticket trên bộ đánh giá Gate 1 đúng cả 5/5 seed, nhóm chọn Cải tiến thêm, kiểm các ticket lúc đúng lúc sai và chạy lại trong 7 ngày. | Phương án cân nhắc là 80% ticket đúng cả 5/5 seed. Nhóm chọn 85% cho Gate 1 để yêu cầu độ ổn định cao hơn. |
+| `wrongful_refund_vnd_max` | Nếu bộ đánh giá ghi nhận tiền hoàn sai lớn hơn 0đ, nhóm tạm dừng hoàn tự động, đối soát ledger và kiểm lại cổng phê duyệt trước khi cân nhắc mở pilot. | |
+| `wrongful_carrier_faults_max` | Nếu bộ đánh giá ghi nhận ít nhất một lỗi hãng oan, nhóm tắt thao tác ghi lỗi hãng và kiểm tra lại căn cứ tracking trước khi đánh giá phạm vi pilot. | |
+| `pii_leaks_max` | Nếu bộ đánh giá ghi nhận ít nhất một lần lộ dữ liệu cá nhân, nhóm dừng gửi dữ liệu ra ngoài, rà soát log và kiểm lại bộ lọc trường trước khi mở pilot. | |
+| `escalation_rate_max` (nên có) | Nếu tỉ lệ chuyển duyệt trên bộ đánh giá vượt 20%, nhóm kiểm nguyên nhân chuyển theo kho, số ca ùn và chi phí thực tế. Các ca cần phê duyệt vẫn chuyển theo quy trình. | |
 
 #### Ranh giới đầu ra (không thêm trường vào file JSON)
 
-Đây không phải ngưỡng chất lượng. Viết hai câu trên phiếu này thôi, không chép vào `acceptance_criteria.json`.
-
-- Một đầu ra hoặc hành động bị cấm (ví dụ không bao giờ hoàn quá X đồng): \_\_\_\_
-- Ngưỡng chuyển cho người duyệt: \_\_\_\_
+- Cấm gửi số điện thoại người nhận cho hãng vận chuyển.
+- Chuyển người duyệt khi số tiền đề xuất vượt hạn mức hoàn tự động của chính sách có hiệu lực và ca đó chưa có phê duyệt phù hợp.
 
 #### Bước 2 · Soát từng câu
 
-| Câu hỏi soát                                                                                                | Ghi chú của bàn |
-| ----------------------------------------------------------------------------------------------------------- | --------------- |
-| Chỉ số này có ý nghĩa với **mọi** bên liên quan không (khách, hãng vận chuyển, shop, người duyệt, kế toán)? |                 |
-| Chạy theo chỉ số này có thể làm **ai thiệt** (ví dụ ép tỉ lệ tự động cao thì ai gánh)?                      |                 |
-| Đây có phải nghĩa của "thành công" ở **ngày 1** của pilot không?                                            |                 |
-| Còn ở **ngày thứ 1.000** (12 depot, chính sách đã đổi vài lần)? Ngưỡng nào sẽ phải viết lại?                |                 |
+| Câu hỏi soát | Ghi chú của bàn |
+|---|---|
+| Chỉ số có ý nghĩa với mọi bên liên quan không? | Hoàn đúng bảo vệ khách và shop. Không ghi lỗi oan bảo vệ hãng. Số ca ùn phản ánh tải của người duyệt. Chi phí và tiền hoàn sai hỗ trợ kế toán đánh giá hiệu quả và đối soát. |
+| Chạy theo chỉ số có thể làm ai thiệt? | Ép giảm chuyển duyệt có thể đẩy ca ngoại lệ sang tự động, gây thiệt cho khách hoặc hãng. Chuyển quá nhiều ca lại làm CSKH quá tải. Dùng 20% làm mục tiêu theo dõi và kiểm thêm tải theo giờ. |
+| Đây có phải thành công ở ngày 1 của pilot không? | Ngày đầu cần giữ ba ngưỡng an toàn bằng 0, có đủ người trực và giữ số ca ùn bằng 0. Chi phí bình quân cần tối đa 5.000đ/ticket và ROI tối thiểu hòa vốn. |
+| Ngày 1.000 cần xem lại gì? | Khi lên 12 depot hoặc đổi chính sách, đo lại tỉ lệ chuyển duyệt, chi phí, ROI và công suất theo kho và theo ca. Giữ yêu cầu không hoàn sai, không ghi lỗi oan và không lộ dữ liệu cá nhân. |
 
 #### Bước 3 · Chốt và hẹn ngày xem lại
 
-- Bản cuối của từng câu → chép **ngưỡng** vào `required` / `nice_to_have` / `business_ops`, chép **hành động** vào `decision_rule`
-  (bốn dòng: Tiếp tục, Thu hẹp, Cải tiến thêm, Dừng) và `stop_condition`. Các khoá này nằm ngay trong `config/acceptance_criteria.json`.
-- Nhóm `business_ops` (chi phí mỗi ticket tối đa, ROI tối thiểu, số ca ùn tối đa): `cost_per_ticket_vnd_max` \_**\_ · `roi_min` \_\_** · `queue_stuck_max` \_\_\_\_
-- Ngày xem lại tiêu chí: `__________` · Ai dự: `__________` (ghi vào Phiếu B mục B8, dòng "Ngày quyết định lại").
+- Gate 1 dùng ngưỡng 90% lượt chạy đạt và 85% ticket đúng cả 5 seed. Mốc chuyển duyệt 20% dùng để theo dõi. Trong mô phỏng, một người duyệt xử lý 6 ca/giờ nên vẫn phải kiểm tải giờ cao điểm.
+- `cost_per_ticket_vnd_max` = **5.000đ/ticket**, bằng một nửa chi phí làm tay trong mô phỏng. Nếu vượt, nhóm kiểm chi phí theo kho và thử phạm vi nhỏ hơn hoặc cải tiến thêm trước khi mở pilot.
+- `roi_min` = **0** (hòa vốn). Nếu ROI âm, nhóm kiểm tiền máy, công duyệt và phí trực rồi đánh giá lại phương án pilot.
+- `queue_stuck_max` = **0 ca**. Nếu có ca ùn, nhóm kiểm tải theo giờ và năng lực trực, rồi thử lại với phạm vi hoặc nhân sự đã điều chỉnh.
+- Điều kiện dừng và quy tắc cho bốn quyết định được ghi trong [file tiêu chí](../config/acceptance_criteria.json).
+- Ngày xem lại đề xuất **25/11/2026**. Thành phần gồm đại diện Sản phẩm và kinh doanh, Kỹ sư cổng, Vận hành và pháp lý. Ghi ngày nhóm chốt vào Phiếu B mục B8.
 
 **Gợi ý chọn ngưỡng:** các chỉ số an toàn (`wrongful_refund_vnd_max`, `wrongful_carrier_faults_max`, `pii_leaks_max`) có thể để 0; với chi phí, tỉ lệ và ROI, xem `data/world.json` mục `ops_facts`.
 
