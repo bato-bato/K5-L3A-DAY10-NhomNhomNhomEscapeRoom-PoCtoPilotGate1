@@ -1,12 +1,17 @@
 {
-  "team": "",
-  "members": [],
-  "incident": "",
-  "decision_v1": "",
-  "decision_v2": "",
+  "team": "K5-L3A-DAY10-NhomNhomNhomEscapeRoom-PoCtoPilotGate1",
+  "members": [
+    "TongThienBao-2A202603461",
+    "NguyenThiThanhBinh-2A202603497",
+    "PhanHoangPhuc-2A202603455",
+    "NguyenQuynhTrang-2A202603477"
+  ],
+  "incident": "S1",
+  "decision_v1": "Tiếp tục",
+  "decision_v2": "Cải tiến thêm",
   "three_lines": {
-    "environment_assumption": "",
-    "reduce_or_prevent": "",
-    "measure_in_pilot": ""
+    "environment_assumption": "Thiết kế dựa vào việc trạng thái DELIVERED và ngày giao đến cùng nhau từ hệ thống tracking, nhưng đồng bộ giữa kho và hãng có thể lệch.",
+    "reduce_or_prevent": "Cổng ngăn ghi tự động khi thiếu ngày giao hoặc vượt hai lỗi hãng/ngày trong mô phỏng, còn đối soát và giám sát chỉ giảm tác hại khi tracking có dữ liệu sai nhưng hợp lệ.",
+    "measure_in_pilot": "Trước Gate 2, đo chi phí mỗi ticket, tỉ lệ thiếu ngày giao, thời gian xử lý thủ công và số lỗi hãng được xác nhận trên một tuần dữ liệu thực."
   }
 }

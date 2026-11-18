@@ -42,3 +42,21 @@ Mã commit, mã lần chạy (`runs/<mã>`), dòng trong phiếu.
 ### Exit ticket
 
 Một điều học được, một điều còn chưa chắc.
+
+## TongThienBao-2A202603461
+
+### Phần việc phụ trách
+
+Vận hành và pháp lý, điều phối bản chung và gom bài.
+
+### Đóng góp cụ thể
+
+B4–B5, B7.5–B7.6, cấu hình vận hành và pháp lý, ghi nhận thẻ S1 và chuẩn bị gói nộp. Dùng Codex để soạn và rà tài liệu, triển khai cổng S1, chạy kiểm tra và gom bằng chứng.
+
+### Bằng chứng
+
+Commit B4–B5: `17ffb13`. Phiếu C mục C10–C12 và report `R-S1-grade-20261118-163727-92ab8e`.
+
+### Exit ticket
+
+Chờ Tống Thiên Bảo tự ghi sau phần demo.

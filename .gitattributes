@@ -1,0 +1,7 @@
+# Lab checks hashes over file bytes, including line endings.
+* text=auto eol=lf
+/lab10/guards.py -text whitespace=cr-at-eol
+/lab10/guards_round1.py -text whitespace=cr-at-eol
+/lab10/monitors.py -text whitespace=cr-at-eol
+/config/switches.json -text whitespace=cr-at-eol
+/submission/** -text whitespace=cr-at-eol

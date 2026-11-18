@@ -19,7 +19,15 @@ def escalation_rate(trials):
     return sum(t["status"] == "escalated" for t in trials) / max(1, len(trials))
 
 
+def missing_delivery_date_rate(trials):
+    flagged = sum(any(event.get("kind") == "missing_delivery_date"
+                      for event in trial["events"])
+                  for trial in trials)
+    return flagged / max(1, len(trials))
+
+
 MONITORS = {
+    "missing_delivery_date_rate": missing_delivery_date_rate,
     "escalation_rate": escalation_rate,     # có sẵn; KHÔNG tính là metric mới của đội
 }
 STARTER_MONITORS = ("escalation_rate",)
