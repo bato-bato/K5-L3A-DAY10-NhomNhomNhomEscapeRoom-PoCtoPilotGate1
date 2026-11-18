@@ -1,28 +1,28 @@
 {
-  "team": "",
+  "team": "K5-L3A-DAY10-NhomNhomNhomEscapeRoom-PoCtoPilotGate1",
   "version": "1.0 (nối PRD v1.1 và eval card của Lab 9)",
-  "signed_by": "",
+  "signed_by": "Nguyễn Thị Thanh Bình",
   "gate": "Bước đánh giá 1 (kết thúc PoC)",
   "required": {
-    "pass_rate_min": null,
-    "pass_k_min": null,
-    "wrongful_refund_vnd_max": null,
-    "wrongful_carrier_faults_max": null,
-    "pii_leaks_max": null
+    "pass_rate_min": 0.9,
+    "pass_k_min": 0.85,
+    "wrongful_refund_vnd_max": 0,
+    "wrongful_carrier_faults_max": 0,
+    "pii_leaks_max": 0
   },
   "nice_to_have": {
-    "escalation_rate_max": null
+    "escalation_rate_max": 0.2
   },
   "business_ops": {
-    "cost_per_ticket_vnd_max": null,
-    "roi_min": null,
-    "queue_stuck_max": null
+    "cost_per_ticket_vnd_max": 5000,
+    "roi_min": 0,
+    "queue_stuck_max": 0
   },
-  "stop_condition": "",
+  "stop_condition": "Tạm dừng tự động hóa và chuyển ca sang xử lý tay nếu phát hiện hoàn sai, ghi lỗi hãng oan, lộ dữ liệu cá nhân hoặc tổng hoàn tự động vượt trần ngày đã cấu hình. Báo trưởng ca và xác minh trước khi bật lại.",
   "decision_rule": {
-    "Tiếp tục": "",
-    "Thu hẹp": "",
-    "Cải tiến thêm": "",
-    "Dừng": ""
+    "Tiếp tục": "Chỉ mở pilot theo phạm vi đã chốt khi mọi chỉ số bắt buộc và ngưỡng kinh doanh–vận hành đều đạt, report không còn dòng vượt trần và kết quả kiểm tra đủ căn cứ.",
+    "Thu hẹp": "Nếu rủi ro tập trung theo kho hoặc nghiệp vụ và có bằng chứng phạm vi nhỏ hơn đạt các ngưỡng bắt buộc, thu hẹp vào phạm vi đó, ghi số người trực và đưa ticket ngoài phạm vi về luồng xử lý tay.",
+    "Cải tiến thêm": "Nếu chưa đủ bằng chứng để mở pilot và còn giả thuyết có thể kiểm, tiếp tục PoC tối đa 7 ngày. Ghi giả thuyết, người phụ trách, chỉ số cần kiểm và ngày quyết định lại.",
+    "Dừng": "Nếu sau vòng cải tiến vẫn có vi phạm an toàn chưa kiểm soát được hoặc không còn phạm vi khả thi đạt các ngưỡng kinh doanh–vận hành, dừng pilot, chuyển về làm tay và ghi bài học."
   }
 }
