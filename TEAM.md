@@ -85,3 +85,28 @@ Vai N2 trong bàn (đánh giá, kiểm thử, phân tích sự cố; ghi trong b
 - Còn chưa chắc: trên thẻ S1, tỉ lệ chuyển người duyệt tăng từ 0,1538 lên 0,4615 sau khi sửa; với 1 người trực, chưa rõ khi lượng ticket thật lớn hơn thì hàng chờ có còn trong hạn 60 phút không.
 
 Công cụ hỗ trợ: có dùng trợ lý AI để chạy lệnh đo và soạn nháp phần ghi phiếu; số liệu và kết luận đã đối chiếu với report và trace.
+
+## NguyenThiThanhBinh-2A202603497
+
+### Phần việc phụ trách
+
+Sản phẩm và kinh doanh. Phụ trách mục tiêu hệ thống và tiêu chí ký trước đánh giá ở Phiếu A (A1, A4–A5), cùng bản đồ dữ liệu và ví dụ drift ở Phiếu B (B3). Góp phần giải thích quyết định kinh doanh v2 ở Phiếu C (C12).
+
+### Đóng góp cụ thể
+
+- Đưa PRD v1.1 và eval card Lab 9 vào `docs/lab9/` làm căn cứ viết mục tiêu hệ thống. Điền bản tiêu chí với ngưỡng 90% lượt đạt, 85% ticket đúng cả 5 seed, ba ngưỡng an toàn bằng 0 và trần chi phí 5.000đ/ticket. Chốt 20% chuyển duyệt làm mục tiêu theo dõi. Ký và ghi nhận bản tiêu chí trước khi chạy baseline.
+- Lập bản đồ dữ liệu cho quyết định hoàn tiền và ghi lỗi hãng. Dùng tình huống `REFUND-v4` có hiệu lực ngày 01/12/2026 để chỉ ra khi nào cùng một khoản hoàn phải chuyển sang người duyệt và cách phát hiện trợ lý dùng chính sách cũ.
+- Đối chiếu căn cứ kinh doanh cho v2. S1 đạt 65/65 lượt công khai sau sửa, nhưng chi phí 6.623đ/ticket vượt trần đã ký, nên quyết định của nhóm là **Cải tiến thêm**.
+
+### Bằng chứng
+
+- Phiếu A A1, A4–A5 và `config/acceptance_criteria.json`. Commit ký `a1c65c7`, ghi nhận A5 tại `dbb13e0`.
+- Phiếu B B3. Commit `22cb0d6`, tích hợp lên `main` tại `055afb4`.
+- Phiếu C C12 và [báo cáo S1](submission/runs/grade-report.md). Mốc sau sửa `R-S1-after-20261118-163728-92ab8e`.
+
+### Exit ticket
+
+- Mình học được rằng đạt hết lượt kiểm thử công khai vẫn chưa đủ để mở pilot khi chi phí vượt trần đã ký. Chốt tiêu chí từ trước giúp nhóm đưa ra quyết định dựa trên cả chất lượng lẫn chi phí.
+- Mình còn chưa chắc đồng bộ chứng từ giao hàng thực tế sẽ giảm được bao nhiêu ca cần xác minh thủ công. Cần đo lại chi phí mỗi ticket và thời gian chờ duyệt để xem có đạt 5.000đ/ticket mà vẫn giữ an toàn hay không.
+
+Mình dùng trợ lý AI để soạn nháp và rà nội dung Phiếu A, B3 và mục cá nhân.
