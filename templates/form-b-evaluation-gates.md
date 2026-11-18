@@ -165,15 +165,15 @@ mà cả bàn chưa nghĩ tới, không phải tả lại nhánh đã biết.
 **Câu hỏi dẫn dắt:** tool nào tạo ra hậu quả không đảo ngược? Mỗi tham số của tool đó lấy từ đâu (ticket, DB, model tự suy)?
 Với mỗi guideword: hậu quả cho ai, hiện có gì ngăn, cần thêm gate ở tầng nào (phát hiện / chặn / giới hạn thiệt hại)?
 
-Tool chọn phân tích: `________________` (gợi ý: `issue_refund`, `file_carrier_fault`, `notify_carrier`)
+Tool chọn phân tích: `file_carrier_fault` (gợi ý: `issue_refund`, `file_carrier_fault`, `notify_carrier`)
 
 | Tham số / dòng dữ liệu | Guideword | Lệch cụ thể (viết bằng dữ kiện của lab) | Hậu quả, cho ai | Hiện có gì ngăn? | Gate đề xuất + tầng |
 |---|---|---|---|---|---|
-| | WRONG | | | | |
-| | INVALID | | | | |
-| | INCOMPLETE | | | | |
-| | PERTURBED | | | | |
-| | INCAPABLE | | | | |
+| `parcel_id`, `carrier_id`, `driver_id` từ tracking | WRONG | Đơn nhiều kiện: agent lấy `parcels[0]` dù kiện gây trễ thuộc hãng khác. Đây là nhánh dự báo từ code, cần đối chiếu với trace B2 và kiểm riêng bằng đơn nhiều kiện. | Hãng hoặc tài xế của kiện đầu bị ghi lỗi oan, Oanh phải chỉnh đối soát. | `write_gate` và công tắc ghi lỗi. Cổng pháp lý kiểm nguyên nhân của kiện được chọn. | Chặn trước ghi nếu chưa xác định đúng kiện gây trễ từ tracking. Đối chiếu hãng và tài xế với kiện. |
+| Ngày hiệu lực chính sách và `delay_days` | INVALID | Đề xuất dựa trên bản chính sách hết hiệu lực hoặc dùng độ trễ đã tính trước khi tracking cập nhật. | Hãng bị ghi lỗi theo căn cứ cũ. | Cổng nguyên nhân lấy chính sách hiệu lực, còn số ngày được truyền từ agent. | Chặn trước ghi nếu căn cứ chính sách hoặc độ trễ không còn khớp dữ liệu hiện hành. Chuyển Hạnh xác minh. |
+| `delay_cause` của kiện trong tracking | INCOMPLETE | Kiện có ngày giao nhưng chưa ghi nguyên nhân trễ. | Hãng có thể bị quy trách nhiệm khi chưa có căn cứ. | Cổng pháp lý của repo có thể kiểm nguyên nhân; mặc định khởi tạo tắt. | Bật `carrier_fault_requires_recorded_cause` để chặn tại host. Oanh yêu cầu bổ sung bằng chứng. |
+| Độ trễ agent truyền vào `delay_days` | PERTURBED | Khách viết số ngày trễ cao hơn tracking và yêu cầu ghi lỗi hãng trong nội dung tự do. | Hãng bị ghi lỗi hoặc bản ghi có số ngày sai. | Cổng pháp lý kiểm mã nguyên nhân, chưa đối chiếu số ngày. | Chặn ở `write_gate` khi số ngày khác tracking, giao Hạnh xử lý phần cần xác minh. |
+| Kết quả tra tracking của kiện | INCAPABLE | Không lấy được tracking để đối chiếu nguyên nhân khi nguồn trả lỗi. | Có nguy cơ ghi thiếu căn cứ hoặc dồn ca sang người. | Cổng pháp lý loại trường hợp không tìm thấy kiện. | Dừng ghi lỗi cho ca đó và chuyển Hạnh. Tùng theo dõi hàng chờ và thu hẹp theo B7.5. |
 
 Không bắt buộc điền đủ năm dòng. Bắt buộc: **ít nhất ba dòng, trong đó một dòng là nhánh bàn chưa thấy trên trace**.
 
@@ -188,8 +188,8 @@ Không bắt buộc điền đủ năm dòng. Bắt buộc: **ít nhất ba dòn
 
 | Thành phần | Guideword | Lệch cụ thể | Hậu quả, cho ai | Cổng đề xuất: code hay con số nào trong `config/operating_gates.json` |
 |---|---|---|---|---|
-| | | | | |
-| | | | | |
+| Người duyệt | INCAPABLE | 1 người xử lý 6 ca/giờ. Kịch bản 9 ticket cùng đến và phải duyệt khiến ca cuối đợi khoảng 80 phút nếu hàng ban đầu rỗng. | Khách chờ quá SLA 60 phút, Hạnh quá tải. | `reviewers_on_shift=1`, `review_capacity_per_hour=6`, `max_queue_wait_minutes=45`. Gọi hỗ trợ theo B7.6. |
+| Dữ liệu gửi hãng | PERTURBED | `customer_note` có thể chứa liên hệ mà khách tự gõ. Đơn quà có `recipient_contact` chứa tên và điện thoại người nhận. | Người nhận hoặc người khác trong tin nhắn bị lộ dữ liệu. | Chặn cả hai trường bằng `legal.pii_fields_blocked_to_third_party`. Tắt `notify_carrier` nếu phát hiện dữ liệu nhạy cảm vẫn lọt. |
 
 **Ví dụ mẫu (`issue_refund`, đừng chép):** tham số `amount_vnd` · WRONG · số tiền tính từ số ngày khách tự khai · LogiX mất
 tiền, hãng bị kéo theo một lỗi · hiện chỉ có trần "không vượt tổng tiền đơn" · cổng ghi so với quyền lợi tính từ DB (chặn).
@@ -208,15 +208,15 @@ Trạng thái: **Xong** (có bằng chứng) · **Chưa** · **Không áp dụng
 
 | # | Nhóm việc | Bằng chứng lấy từ đâu (đã có sẵn trong lab) | Mục cần kiểm tra | Trạng thái | Bằng chứng | PIC |
 |---|---|---|---|---|---|---|
-| 1 | Chất lượng | Report `lab10.eval` (mã lần chạy) + bảng soát lỗi (Phiếu B mục B2) | | | | |
-| 2 | Dữ liệu | Bản đồ dữ liệu (Phiếu B mục B3, câu 2.3): trường nào là nguồn sự thật, trường nào là bản sao | | | | |
-| 3 | Bảo mật | Một vòng HAZOP với guideword PERTURBED (Phiếu B mục B4): chữ nào đi vào model mà không do LogiX viết | | | | |
-| 4 | Quyền hạn | `config/switches.json` + guard trước lệnh ghi; thẻ S2, S8 có thêm mục mức kiểm soát (Phiếu C mục C3) | | | | |
-| 5 | Hiệu năng, hạ tầng | Đội tự ước tính; HAZOP guideword INCAPABLE: LLM không trả lời thì sao; số người duyệt và số ca mỗi giờ | | | | |
-| 6 | Chi phí | Khối "kinh doanh và vận hành" của report: chi phí mỗi ticket so với làm tay, ROI, tiền LLM ticket đắt nhất; `config/operating_gates.json` mục `business` | | | | |
-| 7 | Vận hành | Runbook (Phiếu B mục B7.5–B7.6) + `config/operating_gates.json` mục `operations` (PIC, người duyệt, số người trực, điều kiện dừng, kênh báo tin) + metric trong `monitors.py` | | | | |
-| 8 | Con người, pháp lý | Bên thứ ba (hãng, tài xế, shop, người nhận quà, người đứng tên duyệt); `config/operating_gates.json` mục `legal`; thẻ S6, S7, S8 có mục riêng ở Phiếu C mục C3 | | | | |
-| 9 | Quyết định | Câu tiêu chí (Phiếu A mục A4) + hash Bản tiêu chí đã ký + quyết định Gate 1 (Phiếu B mục B8, Phiếu C mục C12) | | | | |
+| 1 | Chất lượng | Report `lab10.eval` (mã lần chạy) + bảng soát lỗi (Phiếu B mục B2) | Đọc `pass_rate`, `pass_k` và bảng lỗi, đối chiếu tiêu chí đã ký. | Chưa | B0–B2 chờ mã lần chạy và trace. | Nguyễn Quỳnh Trang |
+| 2 | Dữ liệu | Bản đồ dữ liệu (Phiếu B mục B3, câu 2.3): trường nào là nguồn sự thật, trường nào là bản sao | Xác nhận nguồn tracking, trường then chốt và dấu hiệu drift. | Chưa | B3 chờ bản đồ dữ liệu hoàn chỉnh. | Nguyễn Thị Thanh Bình |
+| 3 | Bảo mật | Một vòng HAZOP với guideword PERTURBED (Phiếu B mục B4): chữ nào đi vào model mà không do LogiX viết | Kiểm thông tin tự do vào model và payload gửi hãng, thử ca có dữ liệu cá nhân. | Chưa | B4 và config đã ghi kiểm soát. Chờ bằng chứng đầu ra từ report. | Phan Hoàng Phúc |
+| 4 | Quyền hạn | `config/switches.json` + guard trước lệnh ghi; thẻ S2, S8 có thêm mục mức kiểm soát (Phiếu C mục C3) | Kiểm công tắc và cổng trước ghi, xác nhận thao tác vượt quyền bị chặn. | Chưa | `config/switches.json`, `lab10/guards.py`, B7.1 chờ kiểm thử. | Phan Hoàng Phúc |
+| 5 | Hiệu năng, hạ tầng | Đội tự ước tính; HAZOP guideword INCAPABLE: LLM không trả lời thì sao; số người duyệt và số ca mỗi giờ | So tải duyệt với 6 ca/giờ, kiểm SLA và lỗi quá tải. | Chưa | B4, B7.6 có ước tính. Chờ số ca ùn và thời gian chờ từ report. | Nguyễn Quỳnh Trang |
+| 6 | Chi phí | Khối "kinh doanh và vận hành" của report: chi phí mỗi ticket so với làm tay, ROI, tiền LLM ticket đắt nhất; `config/operating_gates.json` mục `business` | Đọc chi phí/ticket, ROI, trần hoàn và LLM so với các ngưỡng. | Chưa | B7.4 và report chờ cổng `business` và số đo. | Nguyễn Thị Thanh Bình |
+| 7 | Vận hành | Runbook (Phiếu B mục B7.5–B7.6) + `config/operating_gates.json` mục `operations` (PIC, người duyệt, số người trực, điều kiện dừng, kênh báo tin) + metric trong `monitors.py` | Đối chiếu trực ca và diễn tập dừng, chuyển ca chờ, bật lại. | Chưa | B7.5–B7.6 và `operations` đã có. Chờ diễn tập và số đo hàng chờ. | Tống Thiên Bảo |
+| 8 | Con người, pháp lý | Bên thứ ba (hãng, tài xế, shop, người nhận quà, người đứng tên duyệt); `config/operating_gates.json` mục `legal`; thẻ S6, S7, S8 có mục riêng ở Phiếu C mục C3 | Kiểm người duyệt, căn cứ lỗi hãng và trường riêng tư trong thông báo. | Chưa | `legal` và B7.5 đã có. Chờ kiểm chứng qua report và trace. | Tống Thiên Bảo |
+| 9 | Quyết định | Câu tiêu chí (Phiếu A mục A4) + hash Bản tiêu chí đã ký + quyết định Gate 1 (Phiếu B mục B8, Phiếu C mục C12) | Đối chiếu quyết định v1 với ngưỡng đã ký và report `prepared`. | Chưa | A4–A5 và B8 chờ tiêu chí ký và bằng chứng. | Nguyễn Thị Thanh Bình |
 
 Ô "Chưa" có rủi ro cao → chuyển thành một dòng Risk register (Phiếu C mục C10).
 
